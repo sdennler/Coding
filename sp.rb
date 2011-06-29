@@ -4,6 +4,7 @@ class Thing
 		@name = name
 		@structure = 100
 		@energy = 0
+		@energy_required = 1
 		@the_thing = nil
 		@integrals = []
 	end
@@ -14,12 +15,24 @@ class Thing
 
 	def wire to_thing
 		@the_thing = to_thing
-		aktivate
 		true
 	end
 	
-	def aktivate
+	def activate
+		@integrals.each
 	end
+
+	def energy mod = 0
+		if mod == 0 then
+			@energy += @the_thing.energy(@energy - @energy_required)
+		elsif mod > 0 then
+			@energy += mod
+		elsif @energy >= mod.abs
+			@energy += mod
+			return mod.abs
+		end
+	end
+	
 
 	def working?
 		@energy >= 0
@@ -35,10 +48,10 @@ class Thing
 	end
 end 
 
-class Part < Thing
+class Ship < Thing
 end
 
-class Ship < Part
+class Part < Thing
 end
 
 class EnergySupply < Part
