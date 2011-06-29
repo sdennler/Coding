@@ -13,10 +13,21 @@ class TC_spTest < Test::Unit::TestCase
 		@parent.plug @child
 	end
 	
+	def test_activate
+		assert @child.activate
+	end
+	
+	def test_active?
+		assert @parent.active?
+		assert !@child.active?
+	end
+	
 	def test_energy
 		assert_equal 1, @parent.energy(-1)
 		assert_equal 9, @parent.energy
 		assert_equal -2, @parent.energy(2)
+		assert_equal 11, @parent.energy
+		assert_equal 0, @parent.energy(-12)
 		assert_equal 11, @parent.energy
 	end
 

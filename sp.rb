@@ -20,25 +20,27 @@ class Thing
 	end
 	
 	def activate
-		@integrals.each
+		if @energy_required > @energy
+			@energy = @the_thing.energy(@energy_required - @energy) if @the_thing.kind_of? Part
+		end
+		active?
+	end
+
+	def active?
+		@energy >= @energy_required
 	end
 
 	def energy mod = nil
 		if mod === nil
 			@energy
-		elsif (mod > 0) or (mod <= @energy) then
+		elsif (mod > 0) or (mod.abs <= @energy) then
 			@energy += mod
 			mod * -1
 		else
 			0
 		end
 	end
-	
-
-	def working?
-		@energy >= 0
-	end
-	
+		
 	alias inspect to_s
 	def inspect(data = :base)
 		d  = "#{self.class} "
