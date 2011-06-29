@@ -20,8 +20,9 @@ class Thing
 	end
 	
 	def activate
-		if @energy_required > @energy
-			@energy = @the_thing.energy(@energy_required - @energy) if @the_thing.kind_of? Part
+		@integrals.collect {|i| i.activate}
+		if (@energy_required > @energy) and @the_thing.kind_of?(Thing)
+			@energy = @the_thing.energy(@energy - @energy_required)
 		end
 		active?
 	end

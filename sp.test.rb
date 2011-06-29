@@ -4,6 +4,16 @@ require 'sp'
 class TestThing < Thing
 	attr_reader :integrals, :the_thing
 end
+class MockTestThing < TestThing
+	@@calls = Hash.new(0)
+	def MockTestThing.calls method
+		@@calls[method]
+	end
+	def activate
+		puts 'activate'
+		@@calls[:activate] += 1
+	end
+end
 
 class TC_spTest < Test::Unit::TestCase
 
@@ -13,8 +23,16 @@ class TC_spTest < Test::Unit::TestCase
 		@parent.plug @child
 	end
 	
-	def test_activate
+	def test_activate_activate_integrals
+		2.times {@parent.plug MockTestThing.new}
+		@parent.activate
+		assert_equal 2, MockTestThing.calls(:activate)
+	end	
+	
+	def test_activate_energy_drain
 		assert @child.activate
+		assert_equal 5, @parent.energy
+		assert_equal 5, @child.energy
 	end
 	
 	def test_active?
