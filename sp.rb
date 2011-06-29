@@ -1,10 +1,11 @@
 class Thing
-
-	def initialize(name = '')
+	attr_reader :name, :structure, :energy, :energy_required
+	
+	def initialize(name = '', energy = 0, energy_required = 1)
 		@name = name
 		@structure = 100
-		@energy = 0
-		@energy_required = 1
+		@energy = energy
+		@energy_required = energy_required
 		@the_thing = nil
 		@integrals = []
 	end
@@ -22,14 +23,14 @@ class Thing
 		@integrals.each
 	end
 
-	def energy mod = 0
-		if mod == 0 then
-			@energy += @the_thing.energy(@energy - @energy_required)
-		elsif mod > 0 then
+	def energy mod = nil
+		if mod === nil
+			@energy
+		elsif (mod > 0) or (mod <= @energy) then
 			@energy += mod
-		elsif @energy >= mod.abs
-			@energy += mod
-			return mod.abs
+			mod * -1
+		else
+			0
 		end
 	end
 	
@@ -45,6 +46,10 @@ class Thing
 		d += "(S#{@structure} E#{@energy})"
 		d += "\n "+@integrals.collect {|i| i.inspect}.join(', ') unless data == :base
 		d
+	end
+
+	def attr attr
+		#self.call('@'+attr.to_s)
 	end
 end 
 
