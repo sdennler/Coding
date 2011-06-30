@@ -16,19 +16,20 @@ class Thing
 
 	def wire to_thing
 		@the_thing = to_thing
-		true
 	end
-	
+
 	def activate
-		@integrals.collect {|i| i.activate}
+		@integrals.each {|i| i.activate}
 		if (@energy_required > @energy) and @the_thing.kind_of?(Thing)
 			@energy = @the_thing.energy(@energy - @energy_required)
 		end
-		active?
+		ready?
 	end
 
-	def active?
-		@energy >= @energy_required
+	def ready?
+		return false unless @energy >= @energy_required
+		@integrals.collect {|i| return false unless i.ready?}.compact.inspect
+		true
 	end
 
 	def energy mod = nil
