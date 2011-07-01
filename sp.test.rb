@@ -5,28 +5,54 @@ class TestThing < Thing
 	attr_reader :integrals, :the_thing
 end
 class MockTestThing < TestThing
-	@@calls = Hash.new(0)
+	@@calls = Hash.new([0])
+	def MockTestThing.reset
+		@@calls = Hash.new([0])
+	end
+	def MockTestThing.call_add method, name
+		@@calls[method][0] += 1
+		@@calls[method] << name
+	end
 	def MockTestThing.calls method
-		@@calls[method]
+		@@calls[method][0]
+	end
+	def MockTestThing.call_order method
+		@@calls[method][1..@@calls[method].size]
 	end
 	def activate
-		@@calls[:activate] += 1
+		MockTestThing.call_add :activate, :TestThing
+	end
+end
+class MockEnergySupply < EnergySupply
+	def activate
+		MockTestThing.call_add :activate, :EnergySupply
 	end
 end
 
 class TC_spTest < Test::Unit::TestCase
 
 	def setup
+		MockTestThing.reset
 		@parent = TestThing.new 'Parent 1', 10, 0
 		@child = TestThing.new 'Child 1', 0, 4
 		@parent.plug @child
+	end
+	
+	def test_activate_EnergySupply_first
+		parent = TestThing.new
+		parent.plug MockTestThing.new
+		parent.plug MockEnergySupply.new
+		parent.plug MockTestThing.new
+		parent.activate
+		assert_equal 3, MockTestThing.calls(:activate)
+		assert_equal [:EnergySupply, :TestThing, :TestThing], MockTestThing.call_order(:activate)
 	end
 	
 	def test_activate_activate_integrals
 		2.times {@parent.plug MockTestThing.new}
 		@parent.activate
 		assert_equal 2, MockTestThing.calls(:activate)
-	end	
+	end
 	
 	def test_activate_energy_drain
 		assert @child.activate
@@ -53,7 +79,7 @@ class TC_spTest < Test::Unit::TestCase
 	def test_energy
 		assert_equal 1, @parent.energy(-1)
 		assert_equal 9, @parent.energy
-		assert_equal -2, @parent.energy(2)
+		assert_equal(-2, @parent.energy(2))
 		assert_equal 11, @parent.energy
 		assert_equal 0, @parent.energy(-12)
 		assert_equal 11, @parent.energy

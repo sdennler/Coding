@@ -1,6 +1,6 @@
 class Thing
-	attr_reader :name, :structure, :energy, :energy_required
-	
+	attr_reader :name, :structure, :energy_required
+
 	def initialize(name = '', energy = 0, energy_required = 1)
 		@name = name
 		@structure = 100
@@ -8,6 +8,9 @@ class Thing
 		@energy_required = energy_required
 		@the_thing = nil
 		@integrals = []
+		setup
+	end
+	def setup
 	end
 
 	def plug integral
@@ -19,9 +22,10 @@ class Thing
 	end
 
 	def activate
+		@integrals.sort! {|x,| x.kind_of?(EnergySupply) ? -1 : 1}
 		@integrals.each {|i| i.activate}
-		if (@energy_required > @energy) and @the_thing.kind_of?(Thing)
-			@energy = @the_thing.energy(@energy - @energy_required)
+		if (@energy_required != @energy) and @the_thing.kind_of?(Thing)
+			@energy += @the_thing.energy(@energy - @energy_required)
 		end
 		ready?
 	end
@@ -42,15 +46,21 @@ class Thing
 			0
 		end
 	end
-		
-	alias inspect to_s
-	def inspect(data = :base)
+
+	alias in inspect
+	def inspect(data = :all, nested = '')
+		return super if data == :super
 		d  = "#{self.class} "
 		d += "#{@name} " unless @name.empty?
-		d += "(S#{@structure} E#{@energy})"
-		d += "\n "+@integrals.collect {|i| i.inspect}.join(', ') unless data == :base
+		d += "(S#{@structure} E#{@energy}/#{@energy_required})"
+		nested += ' '
+		if data != :base
+			i = @integrals.collect {|i| i.inspect(data, nested)}.join("\n"+nested)
+			d += "\n" + nested + i unless i == ''
+		end
 		d
 	end
+	alias i inspect
 
 	def attr attr
 		#self.call('@'+attr.to_s)
@@ -64,10 +74,13 @@ class Part < Thing
 end
 
 class EnergySupply < Part
+	def setup
+		@energy = 10
+		@energy_require = (@energy.to_f/10).ceil
+	end
 end
 
 class Gun < Part
-	@energy = -2
 end
 
 class Shield < Part
@@ -92,7 +105,7 @@ class D
 		p = []
 		ship = Ship.new('S'+@count.to_s)
 		p << ship
-		%w(EnergySupply Gun Shield).each {|c|
+		%w(Gun Shield EnergySupply).each {|c|
 			e = nil
 			eval "e = #{c}.new @count.to_s"
 			ship.plug e
