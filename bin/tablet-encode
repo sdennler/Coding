@@ -29,7 +29,8 @@ my @defaultArgs   = ();
     good     => { abitrate => 160, vbitrate => 600, width => 352 },
     best     => { abitrate => 192, vbitrate => 768, width => 400, height => 240 },
     mplayer  => { abitrate => 192, vbitrate => 1200, width => 400, height => 240 },
-    n900     => { abitrate => 192, vbitrate => 2000, width => 800, height => 480 }
+    n900     => { abitrate => 192, vbitrate => 1000, width => 800, height => 480 },
+    n900ori  => { abitrate => 192, vbitrate => 2000, width => 800, height => 480 }
 );
 $CONFIGURE_FILE = "$ENV{HOME}/.tablet-encode.conf";
 
@@ -241,9 +242,14 @@ sub convert {
                  &nearest($info->{height} * $scale));
   my ($targetWidth, $targetHeight) = ($preset->{width},
                                       $preset->{height} || $preset->{width} / $aspect);
-                 
+	print "Max Size:   ".$preset->{width}." x ".$preset->{height}."\n" unless $options{"quiet"};
+	print "Video Size: ".$info->{width}." x ".$info->{height}."\n" unless $options{"quiet"};
+	print "Calc size:  $targetWidth x $targetHeight\n" unless $options{"quiet"};
+	print "Calc size:  $w x $h\n" unless $options{"quiet"};
+	print "Scale:  $scale\n" unless $options{"quiet"};
+
   # Don't upscale...
-  if ($scale > 1) {
+  if ($scale >= 1) {
     ($w, $h) = (&nearest($info->{width}), &nearest($info->{height}));
     print "Changing target width/height to $w x $h to prevent upscaling of $scale.\n" unless $options{"quiet"};
     ($targetWidth, $targetHeight) = ($w, $h);
