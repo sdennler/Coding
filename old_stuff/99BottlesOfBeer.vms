@@ -1,0 +1,39 @@
+;/** 99BottlesOfBeer for vorlage
+; * A vorlage-script variant of 99 bottles of beer.
+; * Vorlage ()is a command preprocessor vor the pbem-game
+; * Erssea (www.eressea-pbem.de), the best game of the world.
+; *
+; * Run it wiht
+; *
+; * #proc OnUnit
+; * {
+; *  #call 99BottlesOfBeer
+; * }
+; *
+; * :P
+; *
+; * This is my first vorlage-script...
+; *
+; * @version 1.0:02.04.26
+; * @author Samuel Dennler
+; * @see www.morepointless.com
+; */
+#proc 99BottlesOfBeer
+{
+ $morebeer='s';
+ $beer=99
+ #while $beer>0
+ {
+  #if $beer==1 { $morebeer='' }
+  #message ''+$beer+' bottle'+$morebeer+' of beer on the wall. '+$beer+' bottles of beer.'
+  #message 'Take one and pass it around,'
+  $beer=$beer-1
+  #if $beer==0 { $morebeer='s' }
+  #message ''+$beer+' bottle'+$morebeer+' of beer on the wall.'
+  #message
+ }
+ #message 'No more bottles of beer on the wall. No more bottles of beer!'
+ #message 'Go to the store and buy some more.'
+ #message '99 bottles of beer on the wall.'
+ #message
+}

@@ -1,0 +1,23 @@
+#!/bin/bash
+# 2010-04-22
+if [ -z "$1" ]; then
+  echo Usage $0 "DVD Title" [start_at_title_number]
+  exit
+fi
+if [[ "$2" =~ ^[0-9]+$ ]]; then
+  t=$(( $2 - 1 ))
+else
+  t=0
+fi
+
+while true
+do
+  t=$(( $t + 1 ))
+  ot=$t
+  if [ $ot -le 9 ]; then
+   ot="0$ot"
+  fi
+  echo "Try Title $t"
+  tablet-encode -p n900 dvd://$t "$1 Title $ot.n900.avi" || break
+done
+echo "Stopped at Title $t"

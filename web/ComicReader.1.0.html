@@ -1,0 +1,108 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>ComicReader</title>
+
+<style type="text/css">
+#paging{
+ padding: 10px;
+ width: 444px;
+ text-align: center;
+}
+input{
+ padding: 10px;
+ margin: 8px;
+ width: 150px;
+}
+#page{
+ width: 60px;
+ text-align: center;
+}
+#url{
+ width: 440px;
+}
+</style>
+
+<script type="text/javascript">
+
+function createCookie(name,value,days){
+ if(days){
+  var date = new Date();
+  date.setTime(date.getTime()+(days*24*60*60*1000));
+  var expires = "; expires="+date.toGMTString();
+ }
+ else var expires = "";
+ document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name){
+ var nameEQ = name + "=";
+ var ca = document.cookie.split(';');
+ for(var i=0;i < ca.length;i++) {
+  var c = ca[i];
+  while (c.charAt(0)==' ') c = c.substring(1,c.length);
+  if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+ }
+ return null;
+}
+
+function eraseCookie(name){
+ createCookie(name,"",-1);
+}
+// Cookie Functions from www.quirksmode.org
+
+function log(text){
+ text = document.createTextNode(text+', ');
+ document.getElementById('log').appendChild(text);
+}
+
+function setup(){
+ log('setup');
+ var page = readCookie('page');
+ if(page){
+  document.getElementById('page').value = page;
+  log('restore '+page);
+ } 
+}
+
+function next(mod){
+ log('next');
+ if (mod === undefined) mod = 1;
+ var page = document.getElementById('page');
+ var url = document.getElementById('url');
+
+ page.value = parseInt(page.value) + mod;
+ updateImage(url.value.replace('##', page.value));
+ savePage(page.value);
+}
+
+function updateImage(src){
+ log('update to ' + src);
+ img = document.createElement('img');
+ img.src = src;
+ document.getElementById('content').appendChild(img);
+}
+
+function savePage(page){
+ log('savePage '+page);
+ document.cookie = 'page='+page;
+}
+</script>
+</head>
+<!--
+<></>
+-->
+<body onload="setup();">
+<div id="content"></div>
+<form id="paging">
+<input type="button" value="Prevous!" onclick="next(-1);" />
+<input id="page" type="text" value="1770" />
+<input type="button" value="Next!" onclick="next();" /><br />
+<input id="url" type="text" value="http://yafgc.net/img/comic/##.jpg" />
+</form>
+
+<p style="font-size:30px; padding-top:20px;"><a href="ComicReader.html">Reload</a></p>
+<div id="log"></div>
+
+</body>
+</html>

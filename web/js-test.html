@@ -1,0 +1,44 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JS-Tests</title>
+
+<style type="text/css">
+</style>
+
+<script type="text/javascript">
+
+function log(text){
+ text = document.createTextNode(text+', ');
+ document.getElementById('log').appendChild(text);
+}
+
+function setup(){
+ log('setup');
+ var o = new Obelisk();
+ log(o);
+ log(o.tak);
+ o.tak = 234;
+ log(o.tak);
+ o.bonk();
+}
+
+function Obelisk(){
+ tak = 123;
+ function bonk(){
+  log('bonk');
+ }
+}
+
+</script>
+</head>
+<!--
+<></>
+-->
+<body onload="setup();">
+
+<p style="font-size:30px; padding-top:20px;"><a href="js-test.html">Reload</a></p>
+<div id="log"></div>
+
+</body>
+</html>
