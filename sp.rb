@@ -39,7 +39,7 @@ class Thing
 	def energy mod = nil
 		if mod === nil
 			@energy
-		elsif (mod > 0) or (mod.abs <= @energy) then
+		elsif (mod > 0) or (mod.abs <= @energy-@energy_required) then
 			@energy += mod
 			mod * -1
 		else

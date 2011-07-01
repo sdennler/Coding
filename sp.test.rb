@@ -54,6 +54,24 @@ class TC_spTest < Test::Unit::TestCase
 		assert_equal 2, MockTestThing.calls(:activate)
 	end
 	
+	def test_activate_dont_give_your_energy
+		parent = TestThing.new '', 6, 4
+		child = TestThing.new '', 0, 5
+		parent.plug child
+		assert !child.activate
+		assert_equal 6, parent.energy
+		assert_equal 0, child.energy
+	end
+	
+	def test_activate_energy_provide
+		parent = TestThing.new '', 0, 4
+		child = EnergySupply.new '', 10, 1
+		parent.plug child
+		assert child.activate
+		assert_equal 9, parent.energy
+		assert_equal 1, child.energy
+	end
+	
 	def test_activate_energy_drain
 		assert @child.activate
 		assert_equal 6, @parent.energy
