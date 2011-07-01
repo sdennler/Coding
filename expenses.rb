@@ -1,9 +1,10 @@
 #!/usr/bin/ruby
 
 data = []
-file = File.new('expenses.txt')
-throw Exception.new 'not a expense file' unless file.gets =~ /creation.date.amount.comment/  
-file.each {|l| data << l.split(/\t|\n/)}
+File.open('expenses.txt') do |file|
+	throw 'not a expense file' unless file.gets =~ /creation.date.amount.comment/  
+	file.each {|l| data << l.split(/\t|\n/)}
+end
 
 data.each {|l| l[1].gsub!(/((..).(..).(..))/, '20\4-\3-\2')}
 data.sort! {|x,y| x[1] <=> y[1]}
