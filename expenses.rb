@@ -1,5 +1,19 @@
 #!/usr/bin/ruby
 
+# expenses.txt looks like
+# creation	date	amount	comment
+# 2011-06-22 23:23:06	22/06/11	200.00	Food
+
+class Hash
+  def inject(n)
+     each { |value| n = yield(n, value) }
+     n
+  end
+  def sum
+    inject(0) { |n, value| n + value }
+  end
+end
+
 data = []
 File.open('expenses.txt') do |file|
 	throw 'not a expense file' unless file.gets =~ /creation.date.amount.comment/  
