@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+</head>
+<body>
+<h2>Ofline:</h2>
+<script type="text/javascript" >
+
+var data = {
+   "version":"1.0", // {string} format version
+   "language":"en", // {string} language ISO code
+   "folder":[  // {array} places inside
+      {
+         "id":"22139", // {int} place id 
+         "name":"Golden Gate National Recreation Area: Land's End", // {string} place title
+         "url":"http://wikimapia.org/22139/Golden_Gate_National_Recreation_Area", // {string} original url
+         "location":{ // {object} location of the place
+            "north":37.788878, // {float} north point of MBR
+            "south":37.78681, // {float} south point of MBR
+            "east":-122.494082, // {float} east point of MBR
+            "west":-122.508352, // {float} east point of MBR
+            "lon":-122.4997044, // {float} center longitude of MBR 
+            "lat":37.7887088 // {float} center latitude of MBR
+         },
+         "polygon":[ // {array} polygon
+            {
+               "x":-122.5077081, // {float} longitude
+               "y":37.7867756 // {float} latitude  
+            },
+            {
+               "x":-122.494082,
+               "y":37.78681
+            },
+            {
+               "x":-122.4945974,
+               "y":37.7880983
+            },
+            {
+               "x":-122.496593,
+               "y":37.7874539
+            },
+            {
+               "x":-122.4973226,
+               "y":37.7875896
+            },
+            {
+               "x":-122.4997044,
+               "y":37.7887088
+            },
+            {
+               "x":-122.5002408,
+               "y":37.7885053
+            },
+            {
+               "x":-122.5024295,
+               "y":37.788234
+            },
+            {
+               "x":-122.5035238,
+               "y":37.7880305
+            },
+            {
+               "x":-122.5060344,
+               "y":37.7882001
+            },
+            {
+               "x":-122.5071502,
+               "y":37.7875048
+            },
+            {
+               "x":-122.5071502,
+               "y":37.7875048
+            },
+            {
+               "x":-122.5077081,
+               "y":37.7867756
+            }
+         ]
+      }
+   ]
+}
+document.write(data.folder[0].polygon[0].x);
+
+</script>
+
+<h2>Online</h2>
+<script type="text/javascript" >
+var apikey = "";
+var request = "http://api.wikimapia.org/?function=box&bbox=99.555,1.2,104.353,6.751&category=88&count=2&format=jsonp&key="+apikey+"&jsoncallback=";
+var callback = "readwikimapia"
+document.write(request+callback);
+</script>
+
+<h3>Try 1 (not FF)</h3>
+<script type="text/javascript" >
+// Callback defined in the URL
+function readwikimapia(data){
+ document.write(data.folder[0].polygon[0].x);
+}
+
+// Create a script object to load the jsonp script
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = request+callback;
+document.body.appendChild(script);
+
+</script>
+
+<h3>Try 2</h3>
+<script type="text/javascript" >
+function getJSONP(url, success) {
+
+    var ud = '_' + +new Date,
+        script = document.createElement('script'),
+        head = document.getElementsByTagName('head')[0] 
+               || document.documentElement;
+
+    window[ud] = function(data) {
+        head.removeChild(script);
+        success && success(data);
+    };
+
+    script.src = url.replace('callback=?', 'callback=' + ud);
+    head.appendChild(script);
+
+}
+
+getJSONP(request+'?', function(data){
+    document.write(data.folder[0].polygon[0].x);
+}); 
+</script>
+
+<h3>Try static</h3>
+<script type="text/javascript" src="http://api.wikimapia.org/?function=box&bbox=99.555,1.2,104.353,6.751&category=88&count=2&format=jsonp&jsoncallback=readwikimapia&key="></script>
+</body>
+</html>
