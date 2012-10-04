@@ -1,0 +1,20 @@
+#!/bin/sh
+# tryuntilsuccess v 1.0
+# http://codeatrandom.blogspot.com/2012/02/run-command-until-it-is-successful.html
+
+tries=0
+echo
+echo Try: $@
+
+while [ "$exit" != "0" ]
+do
+ tries=`expr $tries + 1`
+ echo -n "Try $tries on "
+ date
+ $@
+ exit=$?
+ echo Try $tries give Exit $exit
+ [ $exit != 0 ] && sleep 5
+done
+
+echo -----------------
